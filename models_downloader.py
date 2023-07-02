@@ -1,4 +1,5 @@
 import os
+import ssl
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from typing import List
@@ -6,6 +7,7 @@ from typing import List
 from bs4 import BeautifulSoup
 from retrying import retry
 
+ssl._create_default_https_context = ssl._create_unverified_context
 
 class ModelDownloader:
     def __init__(self, repo_id=None, worker_num: int=16) -> None:
@@ -46,7 +48,10 @@ class ModelDownloader:
     @retry(wait_random_min=100, wait_random_max=500)
     def download(self, link: str):
         print("trying...")
-        os.system(f"wget {link} -P tmp/")
+        flag = os.system(f"wget -N {link} -P tmp/")
+        if flag != 0:
+            print("wget failed. retrying...")
+            raise ValueError("wrong flag")
 
     
     def batch_download(self):
