@@ -1,6 +1,7 @@
 import os
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
+from typing import List
 
 from bs4 import BeautifulSoup
 from retrying import retry
@@ -27,7 +28,7 @@ class ModelDownloader:
         return self.html
     
 
-    def get_download_links(self, html: str=None) -> list[str]:
+    def get_download_links(self, html: str=None) -> List[str]:
         if self.html:
             html = self.html
         if not html:
